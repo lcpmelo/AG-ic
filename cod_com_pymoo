@@ -1,0 +1,50 @@
+import pandas as pd
+import numpy as np
+from pymoo.algorithms.moo.nsga2 import NSGA2
+
+
+def carregar_dados():
+    #Lê o arquivo CSV, processa os dados dos alimentos e retorna uma lista de dicionários.
+    try:
+        df = pd.read_csv("alimentos_consolidados.csv",  sep=',', decimal='.', encoding='utf-8')
+    except FileNotFoundError:
+        print("ERRO: Arquivo 'alimentos_consolidados.csv' não encontrado.")
+        return []
+    except Exception as e:
+        print(f"ERRO ao carregar o arquivo CSV: {e}")
+        return []
+    
+    alimentos = []
+    for _, row in df.iterrows():
+        alimento = {
+            "nome": row['nome'],
+            "proteina": float(row['proteina']),
+            "carboidrato": float(row['carboidrato']),
+            "gordura": float(row['gordura']),
+            "fibra": float(row['fibra']),
+            "sodio": float(row['sodio']),
+            "energia": float(row['energia']),
+            "ferro": float(row['ferro']),
+            "zinco": float(row['zinco']),
+            "is_vegetariano": int(row['is_vegetariano']),
+            "is_vegano": int(row['is_vegano']),
+            "categoria": int(row['categoria']),
+            "emissao_carbono" : float(row['co2/portion'])
+        }
+        alimentos.append(alimento)
+    return alimentos
+
+alimentos = carregar_dados()
+if not alimentos:
+    exit("Falha ao carregar os dados. O script será encerrado.")
+
+necessidades = {
+    "proteina": 50,
+    "carboidrato": 300,
+    "gordura": 70,
+    "fibra": 25,
+    "sodio": 2300,
+    "energia": 2000,
+    "ferro": 18,
+    "zinco": 11
+}
